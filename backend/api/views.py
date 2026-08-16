@@ -45,13 +45,17 @@ def _get_genai_client():
     global _genai_client
     if _genai_client is None:
         from google import genai as _genai
+        from google.genai import types as _t
         key = settings.GEMINI_API_KEY
         if not key or key == "your-gemini-api-key-here":
             raise RuntimeError(
                 "GEMINI_API_KEY is not set. Get one at https://aistudio.google.com/app/apikey "
                 "and add it to backend/.env"
             )
-        _genai_client = _genai.Client(api_key=key)
+        _genai_client = _genai.Client(
+            api_key=key,
+            http_options=_t.HttpOptions(timeout=30000),  # 30s in ms
+        )
     return _genai_client
 
 
@@ -65,7 +69,7 @@ _OCR_SYSTEM = (
     "If the text is too blurry or missing, set readable=false and title/author to empty strings. "
     "Do NOT include markdown fences. Only the JSON object."
 )
-_OCR_MODEL = "gemini-2.0-flash"
+_OCR_MODEL = "gemini-3.1-flash-lite"
 
 
 def ocr_spine_gemini(b64_jpg: str, timeout_s: float = 25.0) -> dict:
@@ -84,7 +88,6 @@ def ocr_spine_gemini(b64_jpg: str, timeout_s: float = 25.0) -> dict:
             ],
             config=_types.GenerateContentConfig(
                 system_instruction=_OCR_SYSTEM,
-                timeout=timeout_s,
             ),
         )
         latency = time.perf_counter() - start

@@ -14,8 +14,9 @@ opencv-python-headless==4.10.0.84
 numpy==2.2.6
 Pillow==11.3.0
 
-# Pretrained local model (YOLOv8n, COCO weights, CPU inference)
-ultralytics==8.3.169
+# Local pretrained spine detector (Tesseract LSTM text region detection)
+# Requires: sudo apt install tesseract-ocr
+pytesseract==0.3.13
 
 # Hosted vision-language model (Gemini Flash)
 google-genai==1.26.0

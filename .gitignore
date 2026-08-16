@@ -29,3 +29,32 @@ Thumbs.db
 
 # Test cache
 .pytest_cache/
+
+# YOLOv8 model weights (download automatically on first run)
+*.pt
+runs/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Environment / secrets
+.env
+*.db
+
+# Node
+node_modules/
+.expo/
+.metro-cache/
+*.lock
+!yarn.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test cache
+.pytest_cache/

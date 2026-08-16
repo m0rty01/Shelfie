@@ -15,6 +15,7 @@ import { scanImage } from '@/src/api';
 import { useToast } from '@/src/toast';
 
 const { height: SCREEN_H } = Dimensions.get('window');
+const HERO_H = Math.min(SCREEN_H * 0.55, 380);
 
 export default function ScanScreen() {
   const insets = useSafeAreaInsets();
@@ -22,7 +23,7 @@ export default function ScanScreen() {
   const toast = useToast();
   const [processing, setProcessing] = useState(false);
   const [status, setStatus] = useState('Detecting spines…');
-  const [step, setStep] = useState(0); // 0,1,2
+  const [step, setStep] = useState(0);
 
   const runScan = async (uri: string) => {
     setProcessing(true);
@@ -75,42 +76,36 @@ export default function ScanScreen() {
 
   return (
     <View style={styles.root}>
-      {/* Full-bleed hero image */}
-      <View style={styles.heroFull}>
+
+      {/* ── Hero image block ── fixed height, dark overlay, WHITE text on top */}
+      <View style={[styles.hero, { height: HERO_H }]}>
         <Image
           source={{ uri: theme.images.heroShelf }}
           style={StyleSheet.absoluteFill}
           contentFit="cover"
           transition={400}
         />
-        {/* Gradient from top for safe area */}
+        {/* Dark scrim so white text is always readable */}
+        <View style={styles.heroScrim} />
+        {/* Stronger gradient at top behind header text */}
         <LinearGradient
-          colors={[theme.colors.surface, 'transparent']}
-          style={[styles.topGradient, { height: insets.top + 60 }]}
-        />
-        {/* Gradient from bottom for buttons */}
-        <LinearGradient
-          colors={['transparent', 'rgba(253,251,247,0.97)', theme.colors.surface]}
-          style={styles.bottomGradient}
-        />
-
-        {/* Header overlay */}
-        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
+          colors={['rgba(0,0,0,0.65)', 'rgba(0,0,0,0.0)']}
+          style={[styles.heroTopGradient, { paddingTop: insets.top + 16 }]}
+        >
           <Text style={styles.eyebrow}>New scan</Text>
           <Text style={styles.title}>Point at{'\n'}a shelf.</Text>
-        </View>
-
-        {/* Tip badge */}
+        </LinearGradient>
+        {/* Tip badge bottom-left */}
         <View style={styles.tipBadge}>
-          <Feather name="zap" size={13} color={theme.colors.onBrandPrimary} />
+          <Feather name="zap" size={13} color="#fff" />
           <Text style={styles.tipText}>Best results face-on, evenly lit</Text>
         </View>
       </View>
 
-      {/* Action buttons */}
-      <View style={[styles.actions, { paddingBottom: insets.bottom + 16 }]}>
+      {/* ── Action area ── solid white background, always visible */}
+      <View style={[styles.actions, { paddingBottom: insets.bottom + 20 }]}>
         <Text style={styles.subtitle}>
-          Gemini AI reads every spine and builds your digital library in seconds.
+          Gemini AI reads every spine and builds your library in seconds.
         </Text>
         <Pressable
           testID="scan-camera-btn"
@@ -118,7 +113,7 @@ export default function ScanScreen() {
           disabled={processing}
           style={({ pressed }) => [styles.primaryBtn, pressed && { opacity: 0.88 }]}
         >
-          <Feather name="camera" size={18} color={theme.colors.onBrandPrimary} />
+          <Feather name="camera" size={18} color="#fff" />
           <Text style={styles.primaryBtnText}>Take a photo</Text>
         </Pressable>
         <Pressable
@@ -132,16 +127,12 @@ export default function ScanScreen() {
         </Pressable>
       </View>
 
-      {/* Processing overlay */}
+      {/* ── Processing overlay ── covers everything ── */}
       {processing && (
-        <View style={StyleSheet.absoluteFill} testID="scan-processing-overlay">
-          <LinearGradient
-            colors={['rgba(28,25,23,0.96)', 'rgba(41,27,23,0.98)']}
-            style={StyleSheet.absoluteFill}
-          />
+        <View style={[StyleSheet.absoluteFill, styles.overlay]} testID="scan-processing-overlay">
           <View style={styles.processingContent}>
             <View style={styles.spinnerRing}>
-              <ActivityIndicator size="large" color={theme.colors.onBrandPrimary} />
+              <ActivityIndicator size="large" color="#fff" />
             </View>
             <Text style={styles.processingText}>{status}</Text>
             <View style={styles.stepIndicators}>
@@ -164,63 +155,66 @@ export default function ScanScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: theme.colors.surface },
-  heroFull: {
-    flex: 1,
-    minHeight: SCREEN_H * 0.52,
-    maxHeight: SCREEN_H * 0.62,
+
+  // Hero
+  hero: {
+    width: '100%',
+    backgroundColor: '#2A1F1C',  // fallback while image loads
+    overflow: 'hidden',
   },
-  topGradient: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0,
-    zIndex: 2,
+  heroScrim: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(20,14,12,0.30)',
   },
-  bottomGradient: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
-    height: '50%',
-    zIndex: 2,
-  },
-  header: {
+  heroTopGradient: {
     position: 'absolute',
     top: 0, left: 0, right: 0,
     paddingHorizontal: theme.spacing.xl,
-    zIndex: 3,
+    paddingBottom: theme.spacing.xl,
   },
   eyebrow: {
-    fontSize: 11, letterSpacing: 1.5,
-    color: theme.colors.brandPrimary,
-    textTransform: 'uppercase', fontWeight: '700',
+    fontSize: 11,
+    letterSpacing: 1.8,
+    color: 'rgba(255,255,255,0.75)',   // WHITE on dark image
+    textTransform: 'uppercase',
+    fontWeight: '700',
+    marginBottom: 6,
   },
   title: {
     fontFamily: theme.fonts.display,
     fontSize: 44,
-    color: theme.colors.onSurface,
+    color: '#FFFFFF',                   // WHITE on dark image
     letterSpacing: -1,
-    lineHeight: 50,
-    marginTop: 4,
+    lineHeight: 52,
   },
   tipBadge: {
     position: 'absolute',
-    bottom: theme.spacing.xl,
+    bottom: theme.spacing.lg,
     left: theme.spacing.xl,
-    zIndex: 3,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     backgroundColor: theme.colors.brandPrimary,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     borderRadius: theme.radius.pill,
   },
-  tipText: { color: theme.colors.onBrandPrimary, fontSize: 12, fontWeight: '600' },
+  tipText: { color: '#fff', fontSize: 12, fontWeight: '600' },
+
+  // Actions — SOLID white so buttons are always visible
   actions: {
+    flex: 1,
+    backgroundColor: theme.colors.surface,
     paddingHorizontal: theme.spacing.xl,
-    paddingTop: theme.spacing.md,
+    paddingTop: theme.spacing.xl,
     gap: theme.spacing.md,
+    justifyContent: 'flex-end',
   },
   subtitle: {
-    fontSize: 13, color: theme.colors.mutedText, lineHeight: 19,
-    marginBottom: theme.spacing.xs,
+    fontSize: 13,
+    color: theme.colors.mutedText,
+    lineHeight: 20,
+    marginBottom: 4,
   },
   primaryBtn: {
     backgroundColor: theme.colors.brandPrimary,
@@ -232,24 +226,31 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35, shadowRadius: 12, elevation: 8,
   },
-  primaryBtnText: { color: theme.colors.onBrandPrimary, fontSize: 15, fontWeight: '700', letterSpacing: 0.3 },
+  primaryBtnText: { color: '#fff', fontSize: 15, fontWeight: '700', letterSpacing: 0.3 },
   secondaryBtn: {
     backgroundColor: theme.colors.surfaceSecondary,
     paddingVertical: 14,
     borderRadius: theme.radius.pill,
     alignItems: 'center', justifyContent: 'center',
     flexDirection: 'row', gap: theme.spacing.sm,
-    borderWidth: 1, borderColor: theme.colors.border,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
   secondaryBtnText: { color: theme.colors.onSurface, fontSize: 14, fontWeight: '600' },
+
   // Processing overlay
+  overlay: {
+    backgroundColor: 'rgba(20,12,10,0.93)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   processingContent: {
-    flex: 1, alignItems: 'center', justifyContent: 'center', gap: theme.spacing.lg,
+    alignItems: 'center',
+    gap: theme.spacing.lg,
     paddingHorizontal: theme.spacing.xl,
   },
   spinnerRing: {
-    width: 72, height: 72,
-    borderRadius: 36,
+    width: 72, height: 72, borderRadius: 36,
     backgroundColor: 'rgba(255,255,255,0.1)',
     alignItems: 'center', justifyContent: 'center',
   },
@@ -259,15 +260,15 @@ const styles = StyleSheet.create({
     fontSize: 26,
     textAlign: 'center',
   },
-  stepIndicators: { gap: 10, alignSelf: 'stretch', paddingHorizontal: 20 },
+  stepIndicators: { gap: 12, alignSelf: 'stretch', paddingHorizontal: 24 },
   stepRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   stepDot: {
-    width: 22, height: 22, borderRadius: 11,
+    width: 24, height: 24, borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.15)',
     alignItems: 'center', justifyContent: 'center',
   },
   stepDotActive: { backgroundColor: theme.colors.brandPrimary },
-  stepLabel: { color: 'rgba(255,255,255,0.5)', fontSize: 14 },
-  stepLabelActive: { color: '#fff', fontWeight: '600' },
-  processingSub: { color: 'rgba(255,255,255,0.45)', fontSize: 13 },
+  stepLabel: { color: 'rgba(255,255,255,0.45)', fontSize: 15 },
+  stepLabelActive: { color: '#fff', fontWeight: '700' },
+  processingSub: { color: 'rgba(255,255,255,0.4)', fontSize: 13, marginTop: 4 },
 });

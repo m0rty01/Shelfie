@@ -1,0 +1,41 @@
+export const theme = {
+  colors: {
+    surface: '#FDFBF7',
+    onSurface: '#1C1917',
+    surfaceSecondary: '#F4EFE6',
+    onSurfaceSecondary: '#292524',
+    surfaceTertiary: '#EAE4D9',
+    onSurfaceTertiary: '#44403C',
+    surfaceInverse: '#292524',
+    onSurfaceInverse: '#FDFBF7',
+    brand: '#9C413D',
+    brandPrimary: '#9C413D',
+    onBrandPrimary: '#FFFFFF',
+    brandSecondary: '#C06863',
+    brandTertiary: '#F2E6E5',
+    onBrandTertiary: '#5D2220',
+    success: '#3C5A3E',
+    onSuccess: '#FFFFFF',
+    warning: '#A37033',
+    onWarning: '#FFFFFF',
+    error: '#8B3A36',
+    onError: '#FFFFFF',
+    border: '#E1D9CD',
+    borderStrong: '#C2B6A6',
+    divider: '#E1D9CD',
+    mutedText: '#78716C',
+  },
+  fonts: {
+    display: 'PlayfairDisplay',
+    text: 'System',
+  },
+  radius: { sm: 6, md: 12, lg: 20, pill: 999 },
+  spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xl2: 32, xl3: 48 },
+  images: {
+    empty: 'https://images.unsplash.com/photo-1759264244744-4b0077534bfd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwxfHxlbXB0eSUyMHJlYWRpbmclMjBjaGFpciUyMGNvcm5lcnxlbnwwfHx8fDE3ODY4NDE5OTJ8MA&ixlib=rb-4.1.0&q=85',
+    heroShelf: 'https://images.unsplash.com/photo-1603058817990-2b9a9abbce86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwxfHxhZXN0aGV0aWMlMjB2aW50YWdlJTIwYm9va3NoZWxmJTIwbGlicmFyeXxlbnwwfHx8fDE3ODY4NDE5OTJ8MA&ixlib=rb-4.1.0&q=85',
+    bookStack: 'https://images.unsplash.com/photo-1529590003495-b2646e2718bf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwxfHxzdGFjayUyMG9mJTIwYm9va3MlMjBhZXN0aGV0aWN8ZW58MHx8fHwxNzg2ODQxOTkyfDA&ixlib=rb-4.1.0&q=85',
+  },
+} as const;
+
+export type Theme = typeof theme;

@@ -1,0 +1,53 @@
+{
+  "summary": "Backend tests executed against public preview URL. 16/17 passing. All library CRUD, health, catalog listing, scan happy path (with Gemini call), and scan error handling (empty upload, missing field, bad bytes) work correctly. One fuzzy-matching bug: querying 'children of dune' returns 'Dune' as top result instead of 'Children of Dune'.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "GET /api/catalog?q=children+of+dune",
+        "issue": "Fuzzy matching returns 'Dune' as top match instead of 'Children of Dune'. Both score partial_ratio=100 (since 'dune' is fully contained in 'children of dune'), and stable sort keeps catalog order where 'Dune' comes first. Problem statement explicitly required 'children of dune' → Children of Dune (not Dune). Fix suggestion: in list_catalog(), replace fuzz.partial_ratio for title with fuzz.token_set_ratio OR fuzz.WRatio, or add a length-similarity tiebreaker (e.g., score += 20 * (1 - abs(len(nq)-len(title))/max(len(nq),len(title)))) so longer queries prefer titles of similar length.",
+        "priority": "HIGH"
+      }
+    ],
+    "minor": [
+      {
+        "endpoint": "POST /api/scan",
+        "issue": "OpenCV fallback splits image into 6 equal columns when no vertical edges are detected (line ~198). This means an image with NO spines never returns 422 ZERO_BOOKS — it always returns a scan with 6 spurious boxes sent to Gemini. Consider only using fallback when at least some peaks exist, or explicitly raising ZERO_BOOKS when col.max()==0."
+      },
+      {
+        "endpoint": "POST /api/scan",
+        "issue": "Auto-added books from scan mutate the library without cleanup path in tests. Consider adding a scan_id filter for cleanup or a dry-run flag."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix fuzzy matching in list_catalog() so 'children of dune' returns 'Children of Dune' as top match. Root cause: fuzz.partial_ratio gives 100 to 'dune' because it is a substring of the query. Use token_set_ratio or add a length-similarity tiebreak.",
+    "Consider whether the 6-column fallback in detect_spines() is desired; it means POST /api/scan never returns 422 ZERO_BOOKS in practice (only when col.max()==0, which is extremely rare).",
+    "Optional: register @pytest.mark.timeout in pytest.ini or remove the mark (currently a warning, not a failure)."
+  ],
+  "critical_code_review_comments": [
+    "server.py uses `@app.on_event('startup')` which is deprecated in FastAPI. Consider using lifespan context manager.",
+    "detect_spines fallback (line ~198) always splits into 6 columns when merged<2, defeating ZERO_BOOKS logic — the endpoint will almost never return 422 for non-empty images.",
+    "No pagination on /api/library — will not scale beyond a few hundred books, but fine for MVP.",
+    "Gemini OCR is called sequentially with Semaphore(4) — acceptable, but a scan with 12 spines will take ~30s+. Consider surfacing a per-spine timeout warning to the client.",
+    "server.py is 513 lines — near the 700 line threshold. Consider splitting DB layer, CV layer, and routes into separate modules as it grows."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (new file)"
+  ],
+  "success_rate": {"backend": "94%", "frontend": "N/A (not tested per request)"},
+  "seed_data_creation": "Tests create TEST_-prefixed library entries and delete them at end of each flow. No permanent seed data added. Any books auto-added by the synthetic scan test are not currently cleaned up (Gemini almost always marks synthetic rectangles as unreadable, so this is a non-issue in practice).",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend URL loaded from /app/frontend/.env (EXPO_PUBLIC_BACKEND_URL). Test file at /app/backend/tests/backend_test.py. Uses pytest with xdist -n 2 --dist loadscope (configured in /app/backend/pytest.ini). The synthetic shelf test may take up to 60s because it calls Gemini for each of ~6-7 spines. If retesting fuzzy 'children of dune' fix, ensure the top result title contains 'children of dune' (not just 'dune').",
+  "rca_of_issue": "Bug: 'children of dune' → 'Dune' as top match.\nReproduction: curl 'https://library-capture.preview.emergentagent.com/api/catalog?q=children+of+dune' → first result is 'Dune'.\nRoot cause: In list_catalog() (server.py ~line 342), scoring uses fuzz.partial_ratio(normalized_query, normalized_title). partial_ratio('children of dune','dune')=100 because 'dune' is fully contained inside the query. partial_ratio('children of dune','children of dune')=100 too. Both tied at 100; Python's stable sort keeps insertion order, and Dune (id smaller) appears earlier in catalog.csv, so it becomes the top result.\nMitigation options:\n  (a) Use fuzz.token_set_ratio OR fuzz.WRatio for title comparison.\n  (b) Keep partial_ratio but add a length-based tiebreaker, e.g. score = 0.85*partial_ratio + 0.15*(fuzz.ratio between full query and full title), or subtract abs(len_diff).\n  (c) Multiply score by min(len(nq),len(ct))/max(len(nq),len(ct)) so 'dune' vs 'children of dune' gets penalized for length asymmetry."
+}

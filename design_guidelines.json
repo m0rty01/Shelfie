@@ -1,0 +1,151 @@
+{
+  "app_name": "Shelfie",
+  "personality": "3 Editorial Mobile",
+  "personality_one_liner": "A calm, trustworthy, and content-led digital library that feels like a beautifully typeset catalogue.",
+  "color": {
+    "surface": "#FDFBF7",
+    "onSurface": "#1C1917",
+    "surfaceSecondary": "#F4EFE6",
+    "onSurfaceSecondary": "#292524",
+    "surfaceTertiary": "#EAE4D9",
+    "onSurfaceTertiary": "#44403C",
+    "surfaceInverse": "#292524",
+    "onSurfaceInverse": "#FDFBF7",
+    "brand": "#9C413D",
+    "brandPrimary": "#9C413D",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#C06863",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#F2E6E5",
+    "onBrandTertiary": "#5D2220",
+    "success": "#3C5A3E",
+    "onSuccess": "#FFFFFF",
+    "warning": "#A37033",
+    "onWarning": "#FFFFFF",
+    "error": "#8B3A36",
+    "onError": "#FFFFFF",
+    "border": "#E1D9CD",
+    "borderStrong": "#C2B6A6",
+    "divider": "#E1D9CD"
+  },
+  "typography": {
+    "displayFontFamily": "Playfair Display",
+    "textFontFamily": "Satoshi",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Use magazine-like spacing rhythms with generous vertical breathing room. Avoid dense card-heavy layouts.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": 0,
+  "navigation": "bottom_tabs",
+  "icon_set": "Feather",
+  "glassmorphism": {
+    "enabled": false,
+    "do's": [],
+    "dont's": [
+      "Avoid glassmorphism entirely for Editorial personality. Rely on solid flat surfaces, generous padding, and typography for hierarchy."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Library",
+      "purpose": "A visual grid/list of confirmed books in the user's personal library.",
+      "states": {
+        "loading": "Skeleton grid with subtle opacity pulses.",
+        "empty": "Illustration/Image of an empty reading chair. 'Your shelves are empty.' + 'Scan a bookshelf' primary CTA.",
+        "error": "Readable error message with a 'Retry' button."
+      },
+      "layout": "Header with 'Shelfie' in oversized Playfair Display. Clean grid layout for book covers using surfaceSecondary. Each book item shows cover, title, and author. Minimal UI chrome; let the book imagery and typography stand out."
+    },
+    {
+      "name": "Scan",
+      "purpose": "Camera interface to capture bookshelf photos with real-time feedback.",
+      "states": {
+        "loading": "Full-screen solid surfaceInverse overlay with a loading spinner and 'Detecting spines...' text while AI processes the image.",
+        "empty": "Camera viewfinder.",
+        "error": "Error toast overlay if camera permission denied or processing times out."
+      },
+      "layout": "Full-screen camera view. Bottom area uses surface with generous xl padding containing a primary capture button and an 'Upload Photo' secondary action. Avoid heavy UI on top of the camera."
+    },
+    {
+      "name": "Review",
+      "purpose": "Human-in-the-loop review of AI-detected books.",
+      "states": {
+        "loading": "Spinner in the center of the screen.",
+        "empty": "If no books detected, show a clear message 'We couldn't spot any books' and a 'Retake Photo' button.",
+        "error": "If spine is unreadable or malformed data occurs, highlight the specific book card in warning color and prompt manual entry."
+      },
+      "layout": "Vertical scroll of detected books. Each card uses surfaceSecondary with generous internal padding (lg). Shows cropped spine image, detected title/author, and confidence badge. Persistent sticky bottom action bar with 'Confirm All' or individual Correct/Discard/Confirm actions. High priority actions are fixed at the bottom."
+    },
+    {
+      "name": "BookDetail",
+      "purpose": "Displays full information for a single confirmed book.",
+      "states": {
+        "loading": "Skeleton UI for cover and text blocks.",
+        "empty": "N/A",
+        "error": "Failed to load book data, retry button."
+      },
+      "layout": "Full-width hero image of the book cover/spine at the top (with vertical scrim if text overlays, though Editorial prefers text below). Large serif Title and sans-serif Author metadata below the image. Clean, magazine-like typography layout with generous 2xl spacing between sections."
+    }
+  ],
+  "images": {
+    "library_empty_state": {
+      "url": "https://images.unsplash.com/photo-1759264244744-4b0077534bfd?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwxfHxlbXB0eSUyMHJlYWRpbmclMjBjaGFpciUyMGNvcm5lcnxlbnwwfHx8fDE3ODY4NDE5OTJ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Orange armchair next to a floor lamp near window - cozy reading corner"
+    },
+    "generic_book_stack": {
+      "url": "https://images.unsplash.com/photo-1529590003495-b2646e2718bf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwxfHxzdGFjayUyMG9mJTIwYm9va3MlMjBhZXN0aGV0aWN8ZW58MHx8fHwxNzg2ODQxOTkyfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Pile of vintage books on a wooden surface"
+    },
+    "bookshelf_hero": {
+      "url": "https://images.unsplash.com/photo-1603058817990-2b9a9abbce86?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzd8MHwxfHNlYXJjaHwxfHxhZXN0aGV0aWMlMjB2aW50YWdlJTIwYm9va3NoZWxmJTIwbGlicmFyeXxlbnwwfHx8fDE3ODY4NDE5OTJ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Brown wooden vintage bookshelf with books"
+    }
+  },
+  "haptics": {
+    "capture_photo": "heavy",
+    "confirm_book": "medium",
+    "discard_book": "light",
+    "tab_switch": "light",
+    "error_state": "notification_error"
+  },
+  "instructions_to_main_agent": [
+    "Follow the '3 Editorial Mobile' personality strictly. Use Playfair Display for headings and Satoshi for body text.",
+    "Do NOT use glassmorphism. Rely on solid colors from the palette (e.g., surface, surfaceSecondary) and generous whitespace to establish hierarchy.",
+    "For the Review screen, implement a persistent sticky bottom action bar (anchored above the safe area) to handle primary Confirm/Correct actions, ensuring they are always within the thumb zone.",
+    "Handle error states gracefully as per the design guidelines: Timeouts, 0 books detected, and unreadable spines must have explicit full-screen or card-level error states.",
+    "Apply the gradient-to-dark scrim pattern (top to bottom, transparent -> 70% surfaceInverse) if placing text over images, though Editorial design prefers placing text beneath the image on a solid surface.",
+    "When a single book has low confidence, use the 'warning' color for the confidence badge and ensure the 'Correct' action is highly visible."
+  ]
+}

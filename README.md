@@ -18,11 +18,16 @@ Phone camera → POST /api/scan
   → User confirms / corrects / discards → saved to SQLite
 ```
 
-| Step | Model | Where | Latency |
-|------|-------|--------|---------|
-| Spine detection | Tesseract 4/5 LSTM (`eng.traineddata`) | Local CPU | ~0.5–2s |
-| OCR per spine | `gemini-3.1-flash-lite` | Google API | ~8s/spine |
-| Catalog match | rapidfuzz `token_set_ratio` | Local CPU | <10ms |
+| Step | Model | Where | Measured latency | Estimated cost/spine |
+|------|-------|--------|-----------------|----------------------|
+| Spine detection | Tesseract 4/5 LSTM (`eng.traineddata`) | Local CPU | 0.5–2 s (whole image) | $0 |
+| OCR per spine | `gemini-3.1-flash-lite` | Google API | **7.6–8.6 s** (server log, two consecutive calls: 8.59 s, 7.62 s) | ~$0.00007 †  |
+| Catalog match | rapidfuzz `token_set_ratio` | Local CPU | <1 ms | $0 |
+| **Full scan, 15-spine shelf** | | | **~2 min** (sequential OCR) | **~$0.001** |
+
+† `gemini-3.1-flash-lite` pricing: $0.075/M input tokens, $0.30/M output tokens.
+Each spine crop ≈ 650 input tokens (image + prompt) + 50 output tokens → $0.000049 + $0.000015 ≈ **$0.00007 per spine**.
+A 15-book shelf costs roughly **$0.001 per scan** (one tenth of a cent).
 
 ---
 
@@ -201,7 +206,22 @@ Shelfie/
 
 ## What was cut and why
 
-- **No authentication** — out of scope for a local-only demo app
-- **No pagination** — library is small enough for a single list
-- **Gemini for detection** — kept local (Tesseract) for detection as required; Gemini only for OCR
-- **TESSDATA_PREFIX** — not baked into the app; documented above for portability
+- **Authentication** — out of scope for a single-device local demo
+- **Pagination** — library is expected to be small (<500 books)
+- **Deployment** — spec says "not required"; README is enough to run locally
+
+---
+
+## What I'd do with another day
+
+**Biggest win: parallel Gemini calls**
+Right now OCR calls are sequential: 15 spines × 8s = ~2 min/scan.
+Making them concurrent would drop that to ~8s total — a single `asyncio.gather` change.
+
+**Other high-value items:**
+1. **Batch all spine crops into one Gemini call** — send a grid image of all crops, ask for a JSON array of titles/authors. Reduces API calls from N to 1, slashing cost and latency.
+2. **Stream results via SSE** — show books appearing one by one instead of a 2-min wait.
+3. **Improve spine detection** — Tesseract sometimes falls back to the OpenCV heuristic. A lightweight ONNX text detector (e.g. DB-Net, ~10MB) tuned on bookshelf photos would be more reliable.
+4. **Smarter catalog** — deduplicate editions at query time rather than storing both; add ISBN lookup to fill gaps.
+5. **Cost guardrail** — cap spines per scan (e.g. 20 max) and surface the estimate to the user before they confirm.
+

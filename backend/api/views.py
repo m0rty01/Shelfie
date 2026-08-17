@@ -32,7 +32,7 @@ from rest_framework.views import APIView
 
 from .models import CatalogBook, LibraryBook
 from .serializers import ConfirmRequestSerializer, LibraryBookSerializer, CatalogBookSerializer
-from spine_detector.detector import detect_spines
+from spine_detector.detector import detect_book_spines
 
 logger = logging.getLogger("shelfie")
 
@@ -130,6 +130,7 @@ def match_catalog(title: str, author: str, catalog: list[CatalogBook]) -> tuple[
     query = f"{title} {author}"
 
     # rapidfuzz: score against combined title+author
+    # process.extract with a dict returns (value, score, key) tuples
     results = process.extract(
         query,
         {pk: v[0] for pk, v in choices.items()},
@@ -139,7 +140,7 @@ def match_catalog(title: str, author: str, catalog: list[CatalogBook]) -> tuple[
     if not results:
         return None, 0.0
 
-    best_pk, raw_score, _ = results[0]
+    _matched_value, raw_score, best_pk = results[0]
     confidence = raw_score / 100.0
     if confidence < CONFIDENCE_MIN:
         return None, confidence
@@ -175,39 +176,37 @@ class ScanView(APIView):
             logger.error("Image decode error: %s", exc)
             return Response({"error": "Could not decode image"}, status=400)
 
-        # ── Step 1: Local pretrained spine detection ──
+        # ── Step 1: Local pretrained spine detection (YOLOv8n COCO class 73) ──
+        # Returns pre-cropped PIL Images of each detected book spine.
         try:
-            boxes = detect_spines(img_bytes)
+            spine_crops = detect_book_spines(img_bytes)
+        except ValueError as exc:
+            msg = str(exc)
+            if msg.startswith("ZERO_BOOKS"):
+                return Response({
+                    "scan_id": str(uuid.uuid4()),
+                    "detected_count": 0,
+                    "auto_added_count": 0,
+                    "review": [],
+                    "auto_added": [],
+                })
+            logger.error("Spine detection error: %s", exc)
+            return Response({"error": f"Spine detection failed: {exc}"}, status=422)
         except Exception as exc:
             logger.error("Spine detection error: %s", exc)
             return Response({"error": "Spine detection failed"}, status=500)
 
-        if not boxes:
-            return Response({
-                "scan_id": str(uuid.uuid4()),
-                "detected_count": 0,
-                "auto_added_count": 0,
-                "review": [],
-                "auto_added": [],
-            })
+        # Cap at 12 spines to keep latency reasonable
+        spine_crops = spine_crops[:12]
 
-        # ── Step 2: Crop spines + OCR via Gemini ──
-        pil_full = PILImage.open(BytesIO(img_bytes))
+        # ── Step 2: OCR via Gemini ──
         catalog = list(CatalogBook.objects.all())
         scan_id = str(uuid.uuid4())
 
         auto_added: list[dict] = []
         review: list[dict] = []
 
-        for box in boxes:
-            x, y, w, h = box
-            # Crop spine with small padding
-            pad = 4
-            crop = pil_full.crop((
-                max(0, x - pad), max(0, y - pad),
-                min(pil_full.width, x + w + pad),
-                min(pil_full.height, y + h + pad),
-            ))
+        for crop in spine_crops:
             buf = BytesIO()
             crop.save(buf, format="JPEG", quality=85)
             spine_b64 = base64.b64encode(buf.getvalue()).decode()
@@ -278,7 +277,7 @@ class ScanView(APIView):
 
         return Response({
             "scan_id": scan_id,
-            "detected_count": len(boxes),
+            "detected_count": len(spine_crops),
             "auto_added_count": len(auto_added),
             "review": review,
             "auto_added": auto_added,

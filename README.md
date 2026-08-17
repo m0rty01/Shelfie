@@ -1,8 +1,8 @@
 # Shelfie 📚
 
-A mobile app that photographs a bookshelf, uses Tesseract + Gemini to identify book spines, and builds a personal digital library.
+A mobile app that photographs a bookshelf and builds a structured personal library.
 
-**Stack:** Django REST Framework · SQLite · Tesseract LSTM · Google Gemini · Expo (React Native)
+**Stack:** Django REST Framework · SQLite · YOLOv8n (local, CPU) · Google Gemini (hosted VLM) · Expo (React Native)
 
 ---
 
@@ -10,24 +10,30 @@ A mobile app that photographs a bookshelf, uses Tesseract + Gemini to identify b
 
 ```
 Phone camera → POST /api/scan
-  ① Tesseract LSTM — detects spine bounding boxes (pretrained text detector, local)
-  ② Gemini Flash — OCRs each spine crop → title + author (hosted VLM)
-  ③ RapidFuzz — fuzzy-matches against catalog.csv (token_set_ratio ≥ 0.72 → auto-add)
-  → High-confidence books auto-added to library
-  → Low-confidence books sent to Review screen (human in the loop)
+  ① YOLOv8n (yolov8n.pt, COCO class 73 "book")
+       Pretrained off-the-shelf, CPU-only.
+       Detects bounding boxes of individual book spines in the shelf photo.
+  ② Gemini gemini-3.1-flash-lite (hosted VLM)
+       Each cropped spine image → {"title": ..., "author": ..., "readable": bool}
+  ③ RapidFuzz token_set_ratio
+       Fuzzy-matches OCR text against catalog.csv to assign a confidence score.
+  → confidence ≥ 0.72 → auto-added to library
+  → confidence < 0.72 or unreadable → Review screen (human in the loop)
   → User confirms / corrects / discards → saved to SQLite
 ```
 
+### Local vs. hosted work
+
 | Step | Model | Where | Measured latency | Estimated cost/spine |
 |------|-------|--------|-----------------|----------------------|
-| Spine detection | Tesseract 4/5 LSTM (`eng.traineddata`) | Local CPU | 0.5–2 s (whole image) | $0 |
-| OCR per spine | `gemini-3.1-flash-lite` | Google API | **7.6–8.6 s** (server log, two consecutive calls: 8.59 s, 7.62 s) | ~$0.00007 †  |
-| Catalog match | rapidfuzz `token_set_ratio` | Local CPU | <1 ms | $0 |
+| Spine detection | YOLOv8n (`yolov8n.pt`, COCO) | **Local CPU** | ~120–250 ms (whole image) | $0 |
+| OCR per spine | `gemini-3.1-flash-lite` | **Google API** | **7–9 s** per spine (server logs) | ~$0.00007 † |
+| Catalog match | rapidfuzz `token_set_ratio` | **Local CPU** | < 1 ms | $0 |
 | **Full scan, 15-spine shelf** | | | **~2 min** (sequential OCR) | **~$0.001** |
 
 † `gemini-3.1-flash-lite` pricing: $0.075/M input tokens, $0.30/M output tokens.
-Each spine crop ≈ 650 input tokens (image + prompt) + 50 output tokens → $0.000049 + $0.000015 ≈ **$0.00007 per spine**.
-A 15-book shelf costs roughly **$0.001 per scan** (one tenth of a cent).
+Each spine ≈ 650 input tokens (image + prompt) + 50 output tokens → ~$0.00007/spine.
+A 15-book shelf costs roughly **$0.001 per scan** (< one tenth of a cent).
 
 ---
 
@@ -38,7 +44,6 @@ A 15-book shelf costs roughly **$0.001 per scan** (one tenth of a cent).
 | Python | 3.10+ |
 | Node.js | 18+ |
 | yarn | any |
-| Tesseract | 4 or 5 (`sudo apt install tesseract-ocr`) |
 | Expo Go app | latest (on your phone) |
 
 ---
@@ -54,46 +59,28 @@ cd Shelfie
 
 ## 2 — Backend setup
 
-### 2a. Install Tesseract + language data
-
-```bash
-# Ubuntu / Debian
-sudo apt install tesseract-ocr tesseract-ocr-eng
-
-# macOS
-brew install tesseract
-
-# Or download eng.traineddata manually (no sudo needed):
-mkdir -p ~/tessdata
-curl -L https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata \
-     -o ~/tessdata/eng.traineddata
-# Then add TESSDATA_PREFIX=~/tessdata to backend/.env
-```
-
-### 2b. Install Python dependencies
+### 2a. Install Python dependencies
 
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-### 2c. Create `backend/.env`
+YOLOv8n weights (`yolov8n.pt`) are committed to the repo — no separate download needed.
+
+### 2b. Create `backend/.env`
 
 Get a Gemini API key at **[aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey)**:
 
 ```env
 GEMINI_API_KEY=your-gemini-api-key-here
 SQLITE_PATH=./shelfie.db
-
-# Only needed if Tesseract can't find its data automatically
-# (snap install, unusual paths, etc.)
-TESSDATA_PREFIX=/path/to/tessdata   # folder containing eng.traineddata
 ```
 
-### 2d. Run migrations & start the server
+### 2c. Run migrations & start the server
 
 ```bash
-python3 manage.py migrate          # first time only — creates shelfie.db
+python3 manage.py migrate          # creates shelfie.db and seeds catalog from catalog.csv
 python3 manage.py runserver 0.0.0.0:8000
 ```
 
@@ -103,7 +90,7 @@ curl http://localhost:8000/api/
 # → {"service":"shelfie","status":"ok"}
 ```
 
-The catalog is seeded automatically from `catalog.csv` on first startup.
+The catalog is seeded automatically from `catalog.csv` on first startup (via Django's `AppConfig.ready()`).
 
 ---
 
@@ -143,21 +130,10 @@ Scan the QR code with **Expo Go** (iOS or Android). Phone must be on the same Wi
 
 ```bash
 cd backend
-DJANGO_SETTINGS_MODULE=shelfie.settings python3 - << 'EOF'
-import os, sys, inspect
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shelfie.settings")
-sys.path.insert(0, ".")
-import django; django.setup()
-import tests.test_matching as tm
-passed = failed = 0
-for name, func in sorted(inspect.getmembers(tm, inspect.isfunction)):
-    if not name.startswith("test_"): continue
-    try: func(); print(f"  PASS  {name}"); passed += 1
-    except AssertionError as e: print(f"  FAIL  {name} — {e}"); failed += 1
-    except Exception as e: print(f"  ERROR {name} — {e}"); failed += 1
-print(f"\n{passed} passed, {failed} failed")
-EOF
+python3 -m pytest tests/test_matching.py -v
 ```
+
+8 tests covering: exact match, alternate editions, author name forms (initials, Lastname/Firstname), substring title disambiguation, unreadable OCR, garbage input, typo tolerance, empty catalog.
 
 ---
 
@@ -169,8 +145,9 @@ Shelfie/
 │   ├── manage.py
 │   ├── shelfie/           # Django project (settings, urls)
 │   ├── api/               # DRF views, models, serializers, migrations
-│   ├── spine_detector/    # Tesseract LSTM spine detection + OpenCV fallback
+│   ├── spine_detector/    # YOLOv8n spine detection (COCO class 73, CPU)
 │   ├── catalog.csv        # 100-book fuzzy-match catalog
+│   ├── yolov8n.pt         # Pretrained YOLO weights (committed for clean-clone setup)
 │   ├── tests/             # Matching test suite
 │   └── requirements.txt
 ├── frontend/
@@ -183,7 +160,7 @@ Shelfie/
 │   └── src/
 │       ├── api.ts
 │       └── theme.ts
-├── test_photos/           # Real bookshelf photos for manual testing
+├── test_photos/           # Real bookshelf photos used during development
 ├── AI_USAGE.md            # AI tooling disclosure
 └── README.md
 ```
@@ -204,24 +181,50 @@ Shelfie/
 
 ---
 
+## The catalog — how it was built and what ambiguity is in it
+
+The catalog has 100 entries, built to exercise all the hard matching cases the spec calls out:
+
+- **Two editions of the same book** — *The Hobbit* appears twice (1st edition, Illustrated edition). This tests whether the matcher returns the right entry instead of splitting confidence.
+- **Same book under two regional titles** — *Harry Potter and the Philosopher's Stone* (UK) vs. *Harry Potter and the Sorcerer's Stone* (US). An OCR reading either title must still match with good confidence.
+- **Two genuinely different books that share a title** — *It* (Stephen King) vs. *It Ends with Us* (Colleen Hoover) vs. *It Starts with Us* (Colleen Hoover). Title-only matching would fail here; the scorer uses `title + author` combined.
+- **Omnibus / collected editions alongside individual volumes** — e.g. *The Lord of the Rings* (omnibus) alongside *The Fellowship of the Ring*, *The Two Towers*, *The Return of the King*.
+- **Titles that are substrings of other titles** — *Dune* vs. *Dune Messiah* vs. *Children of Dune*. `token_set_ratio` handles this better than substring matching.
+- **Author names in more than one form** — J.R.R. Tolkien / Tolkien J.R.R., J. K. Rowling / Rowling, J.K., Dostoevsky / Fyodor Dostoevsky / Dostoevsky Fyodor (Lastname, Firstname order on some spines).
+- **Weighted towards books people actually own** — dominated by widely-read fiction and non-fiction (Tolkien, Rowling, Orwell, Fitzgerald, Austen, Hemingway, King, Atwood, Cormac McCarthy, etc.) so real-world photos are likely to produce meaningful matches.
+
+---
+
+## Key decisions and tradeoffs
+
+**YOLOv8n for spine detection, not a text detector**
+YOLOv8n (COCO "book" class 73) finds rectangular book objects reliably even when spines are thin or at angle. A text detector (e.g. Tesseract, CRAFT) would find text regions but miss spines where text is rotated or small — and would produce many more crops to OCR, raising cost.
+
+**Gemini for OCR, not local Tesseract**
+A hosted VLM handles rotated, stylised, and low-contrast spine text far better than Tesseract LSTM on unconstrained photos. The latency cost (~8 s/spine) is the main tradeoff — acceptable for a single-device local demo, but the obvious next improvement is concurrent calls.
+
+**`token_set_ratio` scoring**
+`token_set_ratio` is order-insensitive and handles partial matches well. Combined title+author query means author signal helps break ties between edition variants. Threshold of 0.72 was chosen by running the test suite against the catalog — low enough to catch OCR typos, high enough to avoid false auto-adds.
+
+---
+
 ## What was cut and why
 
 - **Authentication** — out of scope for a single-device local demo
-- **Pagination** — library is expected to be small (<500 books)
+- **Pagination** — library is expected to be small (< 500 books)
 - **Deployment** — spec says "not required"; README is enough to run locally
+- **Concurrent OCR** — sequential calls keep the code simple; documented as the highest-ROI next step
 
 ---
 
 ## What I'd do with another day
 
 **Biggest win: parallel Gemini calls**
-Right now OCR calls are sequential: 15 spines × 8s = ~2 min/scan.
-Making them concurrent would drop that to ~8s total — a single `asyncio.gather` change.
+Right now OCR calls are sequential: 15 spines × 8 s = ~2 min/scan.
+Making them concurrent (`asyncio.gather`) would drop that to ~8 s total.
 
 **Other high-value items:**
-1. **Batch all spine crops into one Gemini call** — send a grid image of all crops, ask for a JSON array of titles/authors. Reduces API calls from N to 1, slashing cost and latency.
+1. **Batch spine crops into one Gemini call** — send a grid image of all crops, ask for a JSON array. Reduces API calls from N to 1, slashing cost and latency.
 2. **Stream results via SSE** — show books appearing one by one instead of a 2-min wait.
-3. **Improve spine detection** — Tesseract sometimes falls back to the OpenCV heuristic. A lightweight ONNX text detector (e.g. DB-Net, ~10MB) tuned on bookshelf photos would be more reliable.
-4. **Smarter catalog** — deduplicate editions at query time rather than storing both; add ISBN lookup to fill gaps.
-5. **Cost guardrail** — cap spines per scan (e.g. 20 max) and surface the estimate to the user before they confirm.
-
+3. **Smarter catalog** — deduplicate editions at query time; add ISBN lookup to fill gaps.
+4. **Cost guardrail** — cap spines per scan (e.g. 20 max) and surface the per-scan estimate to the user before they confirm.

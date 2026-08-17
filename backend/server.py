@@ -170,7 +170,7 @@ GEMINI_OCR_SYSTEM = (
 )
 
 # Model name to use for OCR
-_OCR_MODEL = "gemini-2.0-flash"
+_OCR_MODEL = "gemini-3.1-flash-lite"
 
 
 async def ocr_spine_gemini(b64_jpg: str, timeout_s: float = 25.0) -> dict:

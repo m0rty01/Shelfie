@@ -1,101 +1,101 @@
-id,title,author,edition,cover_url
-1,The Hobbit,J.R.R. Tolkien,1st Edition,https://covers.openlibrary.org/b/isbn/9780547928227-M.jpg
-2,The Hobbit,J.R.R. Tolkien,Illustrated Edition,https://covers.openlibrary.org/b/isbn/9780358263838-M.jpg
-3,Harry Potter and the Sorcerer's Stone,J. K. Rowling,US Edition,https://covers.openlibrary.org/b/isbn/9780590353427-M.jpg
-4,Harry Potter and the Philosopher's Stone,J. K. Rowling,UK Edition,https://covers.openlibrary.org/b/isbn/9780747532743-M.jpg
-5,Harry Potter and the Chamber of Secrets,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439064866-M.jpg
-6,Harry Potter and the Prisoner of Azkaban,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439136365-M.jpg
-7,Harry Potter and the Goblet of Fire,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439139601-M.jpg
-8,Glory,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679727248-M.jpg
-9,Glory,NoViolet Bulawayo,,https://covers.openlibrary.org/b/isbn/9780525561118-M.jpg
-10,The Lord of the Rings,J.R.R. Tolkien,Complete Set,https://covers.openlibrary.org/b/isbn/9780618640157-M.jpg
-11,The Fellowship of the Ring,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928210-M.jpg
-12,The Two Towers,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928203-M.jpg
-13,The Return of the King,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928197-M.jpg
-14,Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441172719-M.jpg
-15,Children of Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441104024-M.jpg
-16,Dune Messiah,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441172696-M.jpg
-17,God Emperor of Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441294671-M.jpg
-18,1984,George Orwell,,https://covers.openlibrary.org/b/isbn/9780451524935-M.jpg
-19,Animal Farm,George Orwell,,https://covers.openlibrary.org/b/isbn/9780451526342-M.jpg
-20,Brave New World,Aldous Huxley,,https://covers.openlibrary.org/b/isbn/9780060850524-M.jpg
-21,Fahrenheit 451,Ray Bradbury,,https://covers.openlibrary.org/b/isbn/9781451673319-M.jpg
-22,The Great Gatsby,F. Scott Fitzgerald,,https://covers.openlibrary.org/b/isbn/9780743273565-M.jpg
-23,To Kill a Mockingbird,Harper Lee,,https://covers.openlibrary.org/b/isbn/9780061120084-M.jpg
-24,Pride and Prejudice,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439518-M.jpg
-25,Sense and Sensibility,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439662-M.jpg
-26,Emma,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439587-M.jpg
-27,Wuthering Heights,Emily Bronte,,https://covers.openlibrary.org/b/isbn/9780141439556-M.jpg
-28,Jane Eyre,Charlotte Bronte,,https://covers.openlibrary.org/b/isbn/9780141441146-M.jpg
-29,The Catcher in the Rye,J. D. Salinger,,https://covers.openlibrary.org/b/isbn/9780316769488-M.jpg
-30,Of Mice and Men,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780140177398-M.jpg
-31,The Grapes of Wrath,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780143039433-M.jpg
-32,East of Eden,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780142004234-M.jpg
-33,Slaughterhouse-Five,Kurt Vonnegut,,https://covers.openlibrary.org/b/isbn/9780385333849-M.jpg
-34,Cat's Cradle,Kurt Vonnegut,,https://covers.openlibrary.org/b/isbn/9780385333481-M.jpg
-35,A Game of Thrones,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553593716-M.jpg
-36,A Clash of Kings,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553579901-M.jpg
-37,A Storm of Swords,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553573428-M.jpg
-38,The Name of the Wind,Patrick Rothfuss,,https://covers.openlibrary.org/b/isbn/9780756404741-M.jpg
-39,The Wise Man's Fear,Patrick Rothfuss,,https://covers.openlibrary.org/b/isbn/9780756407919-M.jpg
-40,Mistborn,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765311788-M.jpg
-41,The Way of Kings,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765326355-M.jpg
-42,Words of Radiance,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765326362-M.jpg
-43,American Gods,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780062572233-M.jpg
-44,Neverwhere,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780380789016-M.jpg
-45,Coraline,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780380807345-M.jpg
-46,The Handmaid's Tale,Margaret Atwood,,https://covers.openlibrary.org/b/isbn/9780385490818-M.jpg
-47,Oryx and Crake,Margaret Atwood,,https://covers.openlibrary.org/b/isbn/9780385721677-M.jpg
-48,Beloved,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9781400033416-M.jpg
-49,Song of Solomon,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9781400033423-M.jpg
-50,The Bluest Eye,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9780307278449-M.jpg
-51,One Hundred Years of Solitude,Gabriel Garcia Marquez,,https://covers.openlibrary.org/b/isbn/9780060883287-M.jpg
-52,Love in the Time of Cholera,Gabriel Garcia Marquez,,https://covers.openlibrary.org/b/isbn/9780307389732-M.jpg
-53,The Alchemist,Paulo Coelho,,https://covers.openlibrary.org/b/isbn/9780062315007-M.jpg
-54,Eleven Minutes,Paulo Coelho,,https://covers.openlibrary.org/b/isbn/9780060589288-M.jpg
-55,Crime and Punishment,Fyodor Dostoevsky,,https://covers.openlibrary.org/b/isbn/9780679734505-M.jpg
-56,The Brothers Karamazov,Fyodor Dostoevsky,,https://covers.openlibrary.org/b/isbn/9780374528379-M.jpg
-57,War and Peace,Leo Tolstoy,,https://covers.openlibrary.org/b/isbn/9781400079988-M.jpg
-58,Anna Karenina,Leo Tolstoy,,https://covers.openlibrary.org/b/isbn/9780143035008-M.jpg
-59,The Little Prince,Antoine de Saint-Exupery,,https://covers.openlibrary.org/b/isbn/9780156012195-M.jpg
-60,The Stranger,Albert Camus,,https://covers.openlibrary.org/b/isbn/9780679720201-M.jpg
-61,The Plague,Albert Camus,,https://covers.openlibrary.org/b/isbn/9780679720218-M.jpg
-62,Lolita,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679723165-M.jpg
-63,Pale Fire,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679723424-M.jpg
-64,The Old Man and the Sea,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684801223-M.jpg
-65,A Farewell to Arms,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684801469-M.jpg
-66,For Whom the Bell Tolls,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684803357-M.jpg
-67,Moby-Dick,Herman Melville,,https://covers.openlibrary.org/b/isbn/9780142437247-M.jpg
-68,The Adventures of Huckleberry Finn,Mark Twain,,https://covers.openlibrary.org/b/isbn/9780142437179-M.jpg
-69,The Adventures of Tom Sawyer,Mark Twain,,https://covers.openlibrary.org/b/isbn/9780143039563-M.jpg
-70,A Tale of Two Cities,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439600-M.jpg
-71,Great Expectations,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439563-M.jpg
-72,Oliver Twist,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439747-M.jpg
-73,Frankenstein,Mary Shelley,,https://covers.openlibrary.org/b/isbn/9780486282114-M.jpg
-74,Dracula,Bram Stoker,,https://covers.openlibrary.org/b/isbn/9780486411095-M.jpg
-75,The Picture of Dorian Gray,Oscar Wilde,,https://covers.openlibrary.org/b/isbn/9780141439570-M.jpg
-76,Do Androids Dream of Electric Sheep?,Philip K. Dick,,https://covers.openlibrary.org/b/isbn/9780345404473-M.jpg
-77,The Man in the High Castle,Philip K. Dick,,https://covers.openlibrary.org/b/isbn/9780679740674-M.jpg
-78,Foundation,Isaac Asimov,,https://covers.openlibrary.org/b/isbn/9780553293357-M.jpg
-79,I Robot,Isaac Asimov,,https://covers.openlibrary.org/b/isbn/9780553294385-M.jpg
-80,The Foundation Trilogy,Isaac Asimov,Omnibus,https://covers.openlibrary.org/b/isbn/9780380410262-M.jpg
-81,Ender's Game,Orson Scott Card,,https://covers.openlibrary.org/b/isbn/9780812550702-M.jpg
-82,Speaker for the Dead,Orson Scott Card,,https://covers.openlibrary.org/b/isbn/9780812550757-M.jpg
-83,Hyperion,Dan Simmons,,https://covers.openlibrary.org/b/isbn/9780553283686-M.jpg
-84,The Fall of Hyperion,Dan Simmons,,https://covers.openlibrary.org/b/isbn/9780553288209-M.jpg
-85,Snow Crash,Neal Stephenson,,https://covers.openlibrary.org/b/isbn/9780553380958-M.jpg
-86,Cryptonomicon,Neal Stephenson,,https://covers.openlibrary.org/b/isbn/9780060512804-M.jpg
-87,Neuromancer,William Gibson,,https://covers.openlibrary.org/b/isbn/9780441569595-M.jpg
-88,The Left Hand of Darkness,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780441478125-M.jpg
-89,A Wizard of Earthsea,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780547722023-M.jpg
-90,The Dispossessed,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780061054884-M.jpg
-91,The Kite Runner,Khaled Hosseini,,https://covers.openlibrary.org/b/isbn/9781594631931-M.jpg
-92,A Thousand Splendid Suns,Khaled Hosseini,,https://covers.openlibrary.org/b/isbn/9781594483851-M.jpg
-93,The Book Thief,Markus Zusak,,https://covers.openlibrary.org/b/isbn/9780375842207-M.jpg
-94,Life of Pi,Yann Martel,,https://covers.openlibrary.org/b/isbn/9780156027328-M.jpg
-95,The Road,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780307387899-M.jpg
-96,Blood Meridian,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780679728757-M.jpg
-97,No Country for Old Men,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780375706677-M.jpg
-98,The Sun Also Rises,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780743297332-M.jpg
-99,Where the Crawdads Sing,Delia Owens,,https://covers.openlibrary.org/b/isbn/9780735219106-M.jpg
-100,Educated,Tara Westover,,https://covers.openlibrary.org/b/isbn/9780399590504-M.jpg
+id,title,author,edition,cover_url,alt_titles
+1,The Hobbit,J.R.R. Tolkien,1st Edition,https://covers.openlibrary.org/b/isbn/9780547928227-M.jpg,
+2,The Hobbit,J.R.R. Tolkien,Illustrated Edition,https://covers.openlibrary.org/b/isbn/9780358263838-M.jpg,
+3,Harry Potter and the Sorcerer's Stone,J. K. Rowling,US Edition,https://covers.openlibrary.org/b/isbn/9780590353427-M.jpg,Harry Potter and the Philosopher's Stone
+4,Harry Potter and the Philosopher's Stone,J. K. Rowling,UK Edition,https://covers.openlibrary.org/b/isbn/9780747532743-M.jpg,Harry Potter and the Sorcerer's Stone
+5,Harry Potter and the Chamber of Secrets,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439064866-M.jpg,
+6,Harry Potter and the Prisoner of Azkaban,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439136365-M.jpg,
+7,Harry Potter and the Goblet of Fire,J. K. Rowling,,https://covers.openlibrary.org/b/isbn/9780439139601-M.jpg,
+8,Glory,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679727248-M.jpg,
+9,Glory,NoViolet Bulawayo,,https://covers.openlibrary.org/b/isbn/9780525561118-M.jpg,
+10,The Lord of the Rings,J.R.R. Tolkien,Complete Set,https://covers.openlibrary.org/b/isbn/9780618640157-M.jpg,Fellowship of the Ring|Two Towers|Return of the King
+11,The Fellowship of the Ring,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928210-M.jpg,The Lord of the Rings
+12,The Two Towers,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928203-M.jpg,The Lord of the Rings
+13,The Return of the King,J.R.R. Tolkien,Single Book,https://covers.openlibrary.org/b/isbn/9780547928197-M.jpg,The Lord of the Rings
+14,Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441172719-M.jpg,Dune Chronicles Book 1
+15,Children of Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441104024-M.jpg,
+16,Dune Messiah,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441172696-M.jpg,
+17,God Emperor of Dune,Frank Herbert,,https://covers.openlibrary.org/b/isbn/9780441294671-M.jpg,
+18,1984,George Orwell,,https://covers.openlibrary.org/b/isbn/9780451524935-M.jpg,Nineteen Eighty-Four
+19,Animal Farm,George Orwell,,https://covers.openlibrary.org/b/isbn/9780451526342-M.jpg,
+20,Brave New World,Aldous Huxley,,https://covers.openlibrary.org/b/isbn/9780060850524-M.jpg,
+21,Fahrenheit 451,Ray Bradbury,,https://covers.openlibrary.org/b/isbn/9781451673319-M.jpg,
+22,The Great Gatsby,F. Scott Fitzgerald,,https://covers.openlibrary.org/b/isbn/9780743273565-M.jpg,
+23,To Kill a Mockingbird,Harper Lee,,https://covers.openlibrary.org/b/isbn/9780061120084-M.jpg,
+24,Pride and Prejudice,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439518-M.jpg,
+25,Sense and Sensibility,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439662-M.jpg,
+26,Emma,Jane Austen,,https://covers.openlibrary.org/b/isbn/9780141439587-M.jpg,
+27,Wuthering Heights,Emily Bronte,,https://covers.openlibrary.org/b/isbn/9780141439556-M.jpg,
+28,Jane Eyre,Charlotte Bronte,,https://covers.openlibrary.org/b/isbn/9780141441146-M.jpg,
+29,The Catcher in the Rye,J. D. Salinger,,https://covers.openlibrary.org/b/isbn/9780316769488-M.jpg,
+30,Of Mice and Men,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780140177398-M.jpg,
+31,The Grapes of Wrath,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780143039433-M.jpg,
+32,East of Eden,John Steinbeck,,https://covers.openlibrary.org/b/isbn/9780142004234-M.jpg,
+33,Slaughterhouse-Five,Kurt Vonnegut,,https://covers.openlibrary.org/b/isbn/9780385333849-M.jpg,
+34,Cat's Cradle,Kurt Vonnegut,,https://covers.openlibrary.org/b/isbn/9780385333481-M.jpg,
+35,A Game of Thrones,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553593716-M.jpg,
+36,A Clash of Kings,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553579901-M.jpg,
+37,A Storm of Swords,George R. R. Martin,,https://covers.openlibrary.org/b/isbn/9780553573428-M.jpg,
+38,The Name of the Wind,Patrick Rothfuss,,https://covers.openlibrary.org/b/isbn/9780756404741-M.jpg,
+39,The Wise Man's Fear,Patrick Rothfuss,,https://covers.openlibrary.org/b/isbn/9780756407919-M.jpg,
+40,Mistborn,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765311788-M.jpg,
+41,The Way of Kings,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765326355-M.jpg,
+42,Words of Radiance,Brandon Sanderson,,https://covers.openlibrary.org/b/isbn/9780765326362-M.jpg,
+43,American Gods,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780062572233-M.jpg,
+44,Neverwhere,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780380789016-M.jpg,
+45,Coraline,Neil Gaiman,,https://covers.openlibrary.org/b/isbn/9780380807345-M.jpg,
+46,The Handmaid's Tale,Margaret Atwood,,https://covers.openlibrary.org/b/isbn/9780385490818-M.jpg,
+47,Oryx and Crake,Margaret Atwood,,https://covers.openlibrary.org/b/isbn/9780385721677-M.jpg,
+48,Beloved,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9781400033416-M.jpg,
+49,Song of Solomon,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9781400033423-M.jpg,
+50,The Bluest Eye,Toni Morrison,,https://covers.openlibrary.org/b/isbn/9780307278449-M.jpg,
+51,One Hundred Years of Solitude,Gabriel Garcia Marquez,,https://covers.openlibrary.org/b/isbn/9780060883287-M.jpg,100 Years of Solitude
+52,Love in the Time of Cholera,Gabriel Garcia Marquez,,https://covers.openlibrary.org/b/isbn/9780307389732-M.jpg,
+53,The Alchemist,Paulo Coelho,,https://covers.openlibrary.org/b/isbn/9780062315007-M.jpg,
+54,Eleven Minutes,Paulo Coelho,,https://covers.openlibrary.org/b/isbn/9780060589288-M.jpg,
+55,Crime and Punishment,Fyodor Dostoevsky,,https://covers.openlibrary.org/b/isbn/9780679734505-M.jpg,Prestuplenie i Nakazanie
+56,The Brothers Karamazov,Fyodor Dostoevsky,,https://covers.openlibrary.org/b/isbn/9780374528379-M.jpg,
+57,War and Peace,Leo Tolstoy,,https://covers.openlibrary.org/b/isbn/9781400079988-M.jpg,
+58,Anna Karenina,Leo Tolstoy,,https://covers.openlibrary.org/b/isbn/9780143035008-M.jpg,
+59,The Little Prince,Antoine de Saint-Exupery,,https://covers.openlibrary.org/b/isbn/9780156012195-M.jpg,Le Petit Prince
+60,The Stranger,Albert Camus,,https://covers.openlibrary.org/b/isbn/9780679720201-M.jpg,L'Etranger
+61,The Plague,Albert Camus,,https://covers.openlibrary.org/b/isbn/9780679720218-M.jpg,
+62,Lolita,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679723165-M.jpg,
+63,Pale Fire,Vladimir Nabokov,,https://covers.openlibrary.org/b/isbn/9780679723424-M.jpg,
+64,The Old Man and the Sea,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684801223-M.jpg,
+65,A Farewell to Arms,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684801469-M.jpg,
+66,For Whom the Bell Tolls,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780684803357-M.jpg,
+67,Moby-Dick,Herman Melville,,https://covers.openlibrary.org/b/isbn/9780142437247-M.jpg,Moby Dick
+68,The Adventures of Huckleberry Finn,Mark Twain,,https://covers.openlibrary.org/b/isbn/9780142437179-M.jpg,Huckleberry Finn
+69,The Adventures of Tom Sawyer,Mark Twain,,https://covers.openlibrary.org/b/isbn/9780143039563-M.jpg,
+70,A Tale of Two Cities,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439600-M.jpg,
+71,Great Expectations,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439563-M.jpg,
+72,Oliver Twist,Charles Dickens,,https://covers.openlibrary.org/b/isbn/9780141439747-M.jpg,
+73,Frankenstein,Mary Shelley,,https://covers.openlibrary.org/b/isbn/9780486282114-M.jpg,
+74,Dracula,Bram Stoker,,https://covers.openlibrary.org/b/isbn/9780486411095-M.jpg,
+75,The Picture of Dorian Gray,Oscar Wilde,,https://covers.openlibrary.org/b/isbn/9780141439570-M.jpg,
+76,Do Androids Dream of Electric Sheep?,Philip K. Dick,,https://covers.openlibrary.org/b/isbn/9780345404473-M.jpg,
+77,The Man in the High Castle,Philip K. Dick,,https://covers.openlibrary.org/b/isbn/9780679740674-M.jpg,Blade Runner
+78,Foundation,Isaac Asimov,,https://covers.openlibrary.org/b/isbn/9780553293357-M.jpg,Foundation Series
+79,I Robot,Isaac Asimov,,https://covers.openlibrary.org/b/isbn/9780553294385-M.jpg,
+80,The Foundation Trilogy,Isaac Asimov,Omnibus,https://covers.openlibrary.org/b/isbn/9780380410262-M.jpg,Foundation|Foundation and Empire|Second Foundation
+81,Ender's Game,Orson Scott Card,,https://covers.openlibrary.org/b/isbn/9780812550702-M.jpg,
+82,Speaker for the Dead,Orson Scott Card,,https://covers.openlibrary.org/b/isbn/9780812550757-M.jpg,
+83,Hyperion,Dan Simmons,,https://covers.openlibrary.org/b/isbn/9780553283686-M.jpg,
+84,The Fall of Hyperion,Dan Simmons,,https://covers.openlibrary.org/b/isbn/9780553288209-M.jpg,
+85,Snow Crash,Neal Stephenson,,https://covers.openlibrary.org/b/isbn/9780553380958-M.jpg,
+86,Cryptonomicon,Neal Stephenson,,https://covers.openlibrary.org/b/isbn/9780060512804-M.jpg,
+87,Neuromancer,William Gibson,,https://covers.openlibrary.org/b/isbn/9780441569595-M.jpg,
+88,The Left Hand of Darkness,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780441478125-M.jpg,
+89,A Wizard of Earthsea,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780547722023-M.jpg,
+90,The Dispossessed,Ursula K. Le Guin,,https://covers.openlibrary.org/b/isbn/9780061054884-M.jpg,
+91,The Kite Runner,Khaled Hosseini,,https://covers.openlibrary.org/b/isbn/9781594631931-M.jpg,
+92,A Thousand Splendid Suns,Khaled Hosseini,,https://covers.openlibrary.org/b/isbn/9781594483851-M.jpg,
+93,The Book Thief,Markus Zusak,,https://covers.openlibrary.org/b/isbn/9780375842207-M.jpg,
+94,Life of Pi,Yann Martel,,https://covers.openlibrary.org/b/isbn/9780156027328-M.jpg,
+95,The Road,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780307387899-M.jpg,
+96,Blood Meridian,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780679728757-M.jpg,
+97,No Country for Old Men,Cormac McCarthy,,https://covers.openlibrary.org/b/isbn/9780375706677-M.jpg,
+98,The Sun Also Rises,Ernest Hemingway,,https://covers.openlibrary.org/b/isbn/9780743297332-M.jpg,
+99,Where the Crawdads Sing,Delia Owens,,https://covers.openlibrary.org/b/isbn/9780735219106-M.jpg,
+100,Educated,Tara Westover,,https://covers.openlibrary.org/b/isbn/9780399590504-M.jpg,

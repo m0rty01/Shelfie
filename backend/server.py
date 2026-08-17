@@ -1,6 +1,6 @@
 """
 Shelfie backend
-FastAPI + SQLite + OpenCV spine detection + Gemini vision OCR + fuzzy matching.
+FastAPI + SQLite + YOLOv8n spine detection + Gemini vision OCR + fuzzy matching.
 """
 from __future__ import annotations
 
@@ -17,9 +17,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, List, Optional
 
+from spine_detector.detector import detect_book_spines
+
 import aiosqlite
-import cv2
-import numpy as np
 from dotenv import load_dotenv
 from fastapi import APIRouter, FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
@@ -148,87 +148,15 @@ async def get_catalog() -> list[dict]:
         return [dict(r) for r in rows]
 
 # ---------------------------------------------------------------------------
-# Local CV: detect book spine bounding boxes from an image using OpenCV.
-# Strategy: vertical-line detection + column projection to find tall,
-# thin rectangles that look like book spines.
+# Local CV: book spine detection is handled by spine_detector.detector
+# (YOLOv8n, COCO class 73 'book', CPU-only).  See that module for details.
 # ---------------------------------------------------------------------------
-def detect_spines(img_bytes: bytes) -> tuple[np.ndarray, list[tuple[int, int, int, int]]]:
-    """Return (BGR image, list of (x,y,w,h) spine boxes)."""
-    arr = np.frombuffer(img_bytes, np.uint8)
-    img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
-    if img is None:
-        raise ValueError("Could not decode image")
-    # Resize to a manageable size
-    H, W = img.shape[:2]
-    max_w = 1200
-    if W > max_w:
-        scale = max_w / W
-        img = cv2.resize(img, (int(W * scale), int(H * scale)))
-        H, W = img.shape[:2]
 
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (3, 3), 0)
-    # Detect vertical edges via Sobel-x
-    sobelx = cv2.Sobel(gray, cv2.CV_16S, 1, 0, ksize=3)
-    absx = cv2.convertScaleAbs(sobelx)
-    # Threshold
-    _, th = cv2.threshold(absx, 40, 255, cv2.THRESH_BINARY)
-    # If there is almost no vertical-edge content, this is not a bookshelf.
-    edge_ratio = float(np.count_nonzero(th)) / float(th.size)
-    if edge_ratio < 0.008:
-        return img, []
-    # Dilate vertically
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, max(15, H // 15)))
-    dil = cv2.dilate(th, kernel, iterations=1)
-    # Column projection to find vertical lines (spine boundaries)
-    col = np.sum(dil, axis=0)
-    if col.max() == 0:
-        return img, []
-    threshold = col.max() * 0.35
-    peaks: list[int] = []
-    in_peak = False
-    start = 0
-    for x in range(len(col)):
-        if col[x] > threshold and not in_peak:
-            in_peak = True
-            start = x
-        elif col[x] <= threshold and in_peak:
-            in_peak = False
-            peaks.append((start + x) // 2)
-    if in_peak:
-        peaks.append((start + len(col)) // 2)
-    # Merge close peaks
-    merged: list[int] = []
-    for p in peaks:
-        if merged and p - merged[-1] < 20:
-            continue
-        merged.append(p)
-    if len(merged) < 2:
-        # Fallback: split into ~6 equal columns
-        n = 6
-        merged = [int(W * i / n) for i in range(n + 1)]
-
-    boxes: list[tuple[int, int, int, int]] = []
-    min_w = 25
-    for i in range(len(merged) - 1):
-        x1, x2 = merged[i], merged[i + 1]
-        w = x2 - x1
-        if w < min_w:
-            continue
-        # Trim vertically: shave 5% top/bottom
-        y1 = int(H * 0.02)
-        y2 = int(H * 0.98)
-        boxes.append((x1, y1, w, y2 - y1))
-    return img, boxes
-
-
-def crop_to_b64(img: np.ndarray, box: tuple[int, int, int, int]) -> str:
-    x, y, w, h = box
-    crop = img[y : y + h, x : x + w]
-    ok, buf = cv2.imencode(".jpg", crop, [cv2.IMWRITE_JPEG_QUALITY, 80])
-    if not ok:
-        return ""
-    return base64.b64encode(buf.tobytes()).decode("ascii")
+def _pil_to_b64(pil_img) -> str:
+    """Encode a PIL Image to a base64 JPEG string."""
+    buf = io.BytesIO()
+    pil_img.save(buf, format="JPEG", quality=80)
+    return base64.b64encode(buf.getvalue()).decode("ascii")
 
 # ---------------------------------------------------------------------------
 # Cloud OCR via Gemini
@@ -390,18 +318,23 @@ async def scan(image: UploadFile = File(...)):
         if len(img_bytes) == 0:
             raise HTTPException(status_code=400, detail="Empty image upload")
 
-        img, boxes = detect_spines(img_bytes)
-        if not boxes:
-            raise HTTPException(status_code=422, detail="ZERO_BOOKS: We couldn't spot any book spines in that photo.")
+        # Detect book spines via YOLOv8n (COCO class 73).
+        # ValueError is raised for ZERO_BOOKS, MALFORMED_BOX, BAD_IMAGE, etc.
+        try:
+            spine_crops = detect_book_spines(img_bytes)
+        except ValueError as exc:
+            msg = str(exc)
+            status = 400 if msg.startswith("BAD_IMAGE") else 422
+            raise HTTPException(status_code=status, detail=msg)
 
         catalog = await get_catalog()
 
         # Cap spines to keep latency reasonable
-        boxes = boxes[:12]
+        spine_crops = spine_crops[:12]
 
-        # Prepare tasks
+        # Convert PIL crops → base64 JPEG strings
         spines: list[DetectedBook] = []
-        crops_b64 = [crop_to_b64(img, b) for b in boxes]
+        crops_b64 = [_pil_to_b64(c) for c in spine_crops]
         crops_b64 = [c for c in crops_b64 if c]
 
         # OCR concurrently but with a small cap

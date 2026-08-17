@@ -57,7 +57,7 @@ export default function ScanScreen() {
     if (!perm.granted) { toast.show('Camera permission required.', 'warning'); return; }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     const res = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.85, allowsEditing: false,
+      mediaTypes: 'images', quality: 0.85, allowsEditing: false,
     });
     if (res.canceled || !res.assets?.[0]?.uri) return;
     runScan(res.assets[0].uri);
@@ -65,7 +65,7 @@ export default function ScanScreen() {
 
   const pickPhoto = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, quality: 0.85, allowsEditing: false,
+      mediaTypes: 'images', quality: 0.85, allowsEditing: false,
     });
     if (res.canceled || !res.assets?.[0]?.uri) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

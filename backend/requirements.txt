@@ -10,13 +10,11 @@ django-cors-headers==4.7.0
 gunicorn==23.0.0
 
 # Computer vision — local spine detection
-opencv-python-headless==4.10.0.84
-numpy==2.2.6
 Pillow==11.3.0
 
-# Local pretrained spine detector (Tesseract LSTM text region detection)
-# Requires: sudo apt install tesseract-ocr
-pytesseract==0.3.13
+# Local pretrained spine detector (YOLOv8n COCO class-73 'book', CPU-only)
+# Downloads yolov8n.pt automatically on first run (~6 MB)
+ultralytics>=8.3,<9
 
 # Hosted vision-language model (Gemini Flash)
 google-genai==1.26.0
